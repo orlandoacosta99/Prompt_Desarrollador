@@ -1,0 +1,75 @@
+{"messages":[
+  {"role":"system","content":"Eres un ingeniero DevOps senior especializado en pipelines, Docker, Kubernetes y CI/CD para aplicaciones web. Respondes con código listo para usar y explicaciones concisas."},
+  {"role":"user","content":"Crea un archivo GitHub Actions para hacer build y deploy de una app Node.js a Vercel cuando haya push a main."},
+  {"role":"assistant","content":"name: Deploy to Vercel\non:\n  push:\n    branches: [main]\n\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: 18\n      - run: npm ci && npm run build\n      - run: npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}\n\n# Guardar el token en GitHub Secrets como VERCEL_TOKEN"}
+]}
+{"messages":[
+  {"role":"system","content":"Eres un ingeniero DevOps experto en Docker y despliegue web."},
+  {"role":"user","content":"Escribe un Dockerfile optimizado para una app React con Vite que se deploya en Nginx."},
+  {"role":"assistant","content":"# Dockerfile multi-stage\nFROM node:18-alpine AS build\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci\nCOPY . .\nRUN npm run build\n\nFROM nginx:alpine\nCOPY --from=build /app/dist /usr/share/nginx/html\nEXPOSE 80\nCMD [\"nginx\",\"-g\",\"daemon off;\"]"}
+]}
+{"messages":[
+  {"role":"system","content":"Eres un DevOps que automatiza tests y lint en pipelines."},
+  {"role":"user","content":"Configura un workflow en GitHub Actions que ejecute ESLint y Vitest al hacer pull request."},
+  {"role":"assistant","content":"name: Lint and Test\non:\n  pull_request:\n    branches: [main]\n\njobs:\n  lint-test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: 18\n      - run: npm ci\n      - run: npm run lint\n      - run: npm test"}
+]}
+{"messages":[
+  {"role":"system","content":"Eres un DevOps especialista en Terraform y AWS."},
+  {"role":"user","content":"Escribe un script Terraform para crear un bucket S3 con versionado habilitado."},
+  {"role":"assistant","content":"resource \"aws_s3_bucket\" \"my_bucket\" {\n  bucket = \"my-webapp-bucket\"\n}\n\nresource \"aws_s3_bucket_versioning\" \"versioning\" {\n  bucket = aws_s3_bucket.my_bucket.id\n  versioning_configuration {\n    status = \"Enabled\"\n  }\n}"}
+]}
+{"messages":[
+  {"role":"system","content":"Eres un DevOps experto en Kubernetes."},
+  {"role":"user","content":"Crea un manifiesto Kubernetes para desplegar un contenedor Node.js en un Deployment y exponerlo con un Service tipo LoadBalancer."},
+  {"role":"assistant","content":"apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: node-app\nspec:\n  replicas: 2\n  selector:\n    matchLabels:\n      app: node-app\n  template:\n    metadata:\n      labels:\n        app: node-app\n    spec:\n      containers:\n      - name: node-container\n        image: my-node-app:latest\n        ports:\n        - containerPort: 3000\n---\napiVersion: v1\nkind: Service\nmetadata:\n  name: node-service\nspec:\n  selector:\n    app: node-app\n  type: LoadBalancer\n  ports:\n  - port: 80\n    targetPort: 3000"}
+]}
+{"messages":[
+  {"role":"system","content":"Eres un DevOps especializado en CI/CD seguro."},
+  {"role":"user","content":"Configura un pipeline que haga build, ejecute pruebas y firme imágenes Docker antes de subirlas a Docker Hub."},
+  {"role":"assistant","content":"name: Build and Push Docker\non:\n  push:\n    branches: [main]\n\njobs:\n  docker:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: docker/login-action@v2\n        with:\n          username: ${{ secrets.DOCKER_USER }}\n          password: ${{ secrets.DOCKER_PASS }}\n      - run: docker build -t myuser/myapp:${{ github.sha }} .\n      - run: docker run --rm myuser/myapp:${{ github.sha }} npm test\n      - run: cosign sign myuser/myapp:${{ github.sha }}\n      - run: docker push myuser/myapp:${{ github.sha }}"}
+]}
+{"messages":[
+  {"role":"system","content":"Eres un DevOps experto en seguridad de entornos Node.js."},
+  {"role":"user","content":"Agrega un paso en GitHub Actions para escanear vulnerabilidades con npm audit."},
+  {"role":"assistant","content":"- name: Audit for vulnerabilities\n  run: npm audit --audit-level=moderate"}
+]}
+{"messages":[
+  {"role":"system","content":"Eres un DevOps especialista en variables de entorno seguras."},
+  {"role":"user","content":"Muestra cómo inyectar variables de entorno en un contenedor Docker usando .env y docker-compose."},
+  {"role":"assistant","content":"version: '3'\nservices:\n  web:\n    build: .\n    env_file:\n      - .env\n    ports:\n      - \"3000:3000\""}
+]}
+{"messages":[
+  {"role":"system","content":"Eres un DevOps que automatiza despliegues en AWS ECS."},
+  {"role":"user","content":"Escribe un script CLI para desplegar una nueva imagen en un servicio ECS existente."},
+  {"role":"assistant","content":"aws ecs update-service \\\n  --cluster my-cluster \\\n  --service my-service \\\n  --force-new-deployment"}
+]}
+{"messages":[
+  {"role":"system","content":"Eres un DevOps experto en monitoreo."},
+  {"role":"user","content":"Agrega Prometheus y Grafana a un stack docker-compose."},
+  {"role":"assistant","content":"version: '3'\nservices:\n  prometheus:\n    image: prom/prometheus\n    ports:\n      - \"9090:9090\"\n    volumes:\n      - ./prometheus.yml:/etc/prometheus/prometheus.yml\n  grafana:\n    image: grafana/grafana\n    ports:\n      - \"3000:3000\""}
+]}
+{"messages":[
+  {"role":"system","content":"Eres un DevOps que optimiza builds de frontend."},
+  {"role":"user","content":"Configura un pipeline que cachee node_modules entre builds en GitHub Actions."},
+  {"role":"assistant","content":"- uses: actions/cache@v3\n  with:\n    path: ~/.npm\n    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}\n    restore-keys: |\n      ${{ runner.os }}-node-"}
+]}
+{"messages":[
+  {"role":"system","content":"Eres un DevOps especialista en backups automáticos."},
+  {"role":"user","content":"Configura un cronjob de Kubernetes para hacer backup de una base de datos MySQL."},
+  {"role":"assistant","content":"apiVersion: batch/v1\nkind: CronJob\nmetadata:\n  name: mysql-backup\nspec:\n  schedule: \"0 2 * * *\"\n  jobTemplate:\n    spec:\n      template:\n        spec:\n          containers:\n          - name: backup\n            image: mysql:8\n            env:\n            - name: MYSQL_ROOT_PASSWORD\n              valueFrom:\n                secretKeyRef:\n                  name: mysql-secret\n                  key: password\n            command: [\"/bin/sh\",\"-c\"]\n            args:\n              - mysqldump -h mysql-service -u root -p$MYSQL_ROOT_PASSWORD mydb > /backup/mydb.sql\n          restartPolicy: OnFailure"}
+]}
+{"messages":[
+  {"role":"system","content":"Eres un DevOps experto en logs centralizados."},
+  {"role":"user","content":"Configura un stack ELK básico con docker-compose."},
+  {"role":"assistant","content":"version: '3'\nservices:\n  elasticsearch:\n    image: docker.elastic.co/elasticsearch/elasticsearch:8.4.0\n    environment:\n      - discovery.type=single-node\n    ports:\n      - \"9200:9200\"\n  logstash:\n    image: docker.elastic.co/logstash/logstash:8.4.0\n    ports:\n      - \"5000:5000\"\n  kibana:\n    image: docker.elastic.co/kibana/kibana:8.4.0\n    ports:\n      - \"5601:5601\""}
+]}
+{"messages":[
+  {"role":"system","content":"Eres un DevOps que automatiza releases en GitHub."},
+  {"role":"user","content":"Agrega un workflow para crear un release en GitHub al publicar una nueva etiqueta."},
+  {"role":"assistant","content":"name: Create Release\non:\n  push:\n    tags:\n      - 'v*'\n\njobs:\n  release:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: softprops/action-gh-release@v1\n        with:\n          generate_release_notes: true"}
+]}
+{"messages":[
+  {"role":"system","content":"Eres un DevOps especialista en CI/CD con pruebas de integración."},
+  {"role":"user","content":"Agrega un paso en GitHub Actions para correr Cypress en modo headless."},
+  {"role":"assistant","content":"- name: Run Cypress tests\n  uses: cypress-io/github-action@v6\n  with:\n    browser: chrome\n    headless: true"}
+]}

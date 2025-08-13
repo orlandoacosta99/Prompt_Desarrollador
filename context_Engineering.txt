@@ -1,0 +1,17 @@
+1. sistema y roles
+
+2. inyeccion dinamica de datos
+
+3. plantillas de contexto
+ejemplo:
+Rol:[modelo]
+objetivo:[]
+Restricciones:[]
+salidas:[]
+
+4. promt chaining -> sacas los datos y se vuelve al llm
+5. Jerarquizacion de datos
+6. uso de memoria-> max de toquens o limitantes
+
+
+
